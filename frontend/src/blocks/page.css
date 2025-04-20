@@ -1,0 +1,10 @@
+.page {
+  background: #000;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  min-height: 100vh;
+  min-width: 320px;
+}

@@ -1,14 +1,14 @@
 # Full Stack Around U.S. Project - TripleTen
 
-## Nombre del proyecto
+### Nombre del proyecto
 
 Full Stack Around U.S. Project
 
-## Autor
+### Autor
 
 Eligio Elizarraraz Molina
 
-## Descripción
+### Descripción
 
 Sitio web con autenticación de usuario, que simula la interfaz del perfil de un usuario dentro de una red social. Dentro de esta red, el usuario puede compartir nuevas publicaciones, borrar antiguos posts, ver las imágenes compartidas por otros usuarios, darles like e inspeccionar con mayor detalle las imágenes! 🌎🖼️
 <br><br>
