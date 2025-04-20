@@ -4,6 +4,7 @@ const { celebrate, Joi } = require("celebrate");
 const bodyParser = require("body-parser");
 const auth = require("./middlewares/auth");
 const app = express();
+require("dotenv").config();
 
 const users = require("./routes/users");
 const cards = require("./routes/cards");

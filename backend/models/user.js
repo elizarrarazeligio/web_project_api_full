@@ -39,6 +39,7 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     minLength: 3,
+    select: false, // No devuelve hash de la contraseña
   },
 });
 
@@ -46,14 +47,17 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
   email,
   password
 ) {
-  return this.findOne({ email }).then((user) => {
-    if (!user) return Promise.reject(new Error("Incorrect password or email."));
-    return bcrypt.compare(password, user.password).then((matched) => {
-      if (!matched)
+  return this.findOne({ email })
+    .select("+password") // Agrega el campo password que se omitió desde el esquema
+    .then((user) => {
+      if (!user)
         return Promise.reject(new Error("Incorrect password or email."));
-      return user;
+      return bcrypt.compare(password, user.password).then((matched) => {
+        if (!matched)
+          return Promise.reject(new Error("Incorrect password or email."));
+        return user;
+      });
     });
-  });
 };
 
 module.exports = mongoose.model("user", userSchema);
