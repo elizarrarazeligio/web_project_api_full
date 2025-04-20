@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const { errorAtFail, typeOfError } = require("../utils/errors");
+const bcrypt = require("bcryptjs");
 
 // ===== GET - Obtiene todos los usuarios =================
 module.exports.getUsers = (req, res) => {
@@ -33,14 +34,16 @@ module.exports.getUserById = (req, res) => {
 
 // ===== POST - Crea un nuevo usuario =====================
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const { name, about, avatar, email, password } = req.body;
 
-  User.create({ name, about, avatar })
-    .then((user) => res.status(201).send({ data: user }))
-    .catch((err) => {
-      const error = typeOfError(err);
-      res.status(error.statusCode).send({ message: error?.message });
-    });
+  bcrypt.hash(password, 10).then((hash) =>
+    User.create({ name, about, avatar, email, password: hash })
+      .then((user) => res.status(201).send({ data: user }))
+      .catch((err) => {
+        const error = typeOfError(err);
+        res.status(error.statusCode).send({ message: error?.message });
+      })
+  );
 };
 
 // ===== PATCH - Actualiza info de usuario ================
