@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-// == Obtención y Verificación de token ===================
+// ===== Obtención y Verificación de token ================
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 

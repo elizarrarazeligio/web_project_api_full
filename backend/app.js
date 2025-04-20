@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { celebrate, Joi } = require("celebrate");
 const bodyParser = require("body-parser");
 const auth = require("./middlewares/auth");
+const cors = require("./middlewares/cors");
 const app = express();
 require("dotenv").config();
 
@@ -10,7 +11,7 @@ const users = require("./routes/users");
 const cards = require("./routes/cards");
 const { createUser, login } = require("./controllers/users");
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3005 } = process.env;
 
 mongoose.connect("mongodb://localhost:27017/aroundb");
 
@@ -19,6 +20,7 @@ app.listen(PORT, () => {
 });
 
 app.use(bodyParser.json());
+app.use(cors);
 
 // Rutas sin autenticación
 app.post("/signin", login);

@@ -33,6 +33,16 @@ module.exports.getUserById = (req, res) => {
     });
 };
 
+// ===== GET - Obtiene los datos del usuario actual =======
+module.exports.getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => res.status(200).send({ data: user }))
+    .catch((err) => {
+      const error = typeOfError(err);
+      res.status(error.statusCode).send({ message: error.message });
+    });
+};
+
 // ===== POST - Crea un nuevo usuario =====================
 module.exports.createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
