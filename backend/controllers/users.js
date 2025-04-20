@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const { errorAtFail, typeOfError } = require("../utils/errors");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // ===== GET - Obtiene todos los usuarios =================
 module.exports.getUsers = (req, res) => {
@@ -72,6 +73,23 @@ module.exports.updateAvatar = (req, res) => {
     { new: true, runValidators: true }
   )
     .then((user) => res.status(200).send({ data: user }))
+    .catch((err) => {
+      const error = typeOfError(err);
+      res.status(error.statusCode).send({ message: error.message });
+    });
+};
+
+// ===== POST - Login (Autenticación) =====================
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, "some-secret-key", {
+        expiresIn: "1w",
+      });
+      res.status(200).send({ message: "Autenticación exitosa!", token });
+    })
     .catch((err) => {
       const error = typeOfError(err);
       res.status(error.statusCode).send({ message: error.message });

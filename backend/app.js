@@ -1,10 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const { celebrate, Joi } = require("celebrate");
 const bodyParser = require("body-parser");
 const app = express();
 
 const users = require("./routes/users");
 const cards = require("./routes/cards");
+const { createUser, login } = require("./controllers/users");
 
 const { PORT = 3000 } = process.env;
 
@@ -23,6 +25,18 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.post("/signin", login);
+app.post(
+  "/signup",
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required().min(3),
+    }),
+  }),
+  createUser
+);
 
 app.use("/users", users);
 app.use("/cards", cards);
