@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const { celebrate, Joi } = require("celebrate");
 const bodyParser = require("body-parser");
+const auth = require("./middlewares/auth");
 const app = express();
 
 const users = require("./routes/users");
@@ -18,14 +19,7 @@ app.listen(PORT, () => {
 
 app.use(bodyParser.json());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: "67dc71c22c60b5201be04c1d",
-  };
-
-  next();
-});
-
+// Rutas sin autenticación
 app.post("/signin", login);
 app.post(
   "/signup",
@@ -38,6 +32,10 @@ app.post(
   createUser
 );
 
+// Middleware de autenticación
+app.use(auth);
+
+// Rutas que requieren autenticación
 app.use("/users", users);
 app.use("/cards", cards);
 
