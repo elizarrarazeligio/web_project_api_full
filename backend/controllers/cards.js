@@ -4,11 +4,12 @@ const { errorAtFail, typeOfError } = require("../utils/errors");
 // ===== GET - Obtiene todos las tarjetas =================
 module.exports.getCards = (req, res) => {
   Card.find({})
+    .sort({ createdAt: -1 })
     .orFail(() => {
       const error = errorAtFail("No se encontró ninguna tarjeta.");
       throw error;
     })
-    .populate("owner")
+    .populate("owner likes")
     .then((cards) => res.status(200).send({ data: cards }))
     .catch((err) => {
       const error = typeOfError(err);

@@ -18,7 +18,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { api } from "../utils/api";
+import { api } from "../utils/Api";
 import * as auth from "../utils/auth";
 import { setToken, getToken } from "../utils/token";
 
@@ -52,14 +52,11 @@ function App() {
     ),
   };
 
-  // Efecto para renderizar información de usuario al montar App
-  useEffect(() => {
-    api.getUserInfo().then((data) => setCurrentUser(data));
-  }, []);
-
   // Efecto para renderizar tarjetas al montar App
   useEffect(() => {
-    api.getInitialCards().then((data) => setCards(data));
+    api.getInitialCards().then(({ data }) => {
+      setCards(data);
+    });
   }, []);
 
   // Efecto para verificar token al montar App
@@ -67,10 +64,14 @@ function App() {
     const jwt = getToken();
     if (!jwt) return;
 
-    auth.getUserInfo(jwt).then(({ data }) => {
-      setIsLoggedIn(true);
-      setEmail(data.email);
-    });
+    auth
+      .getUserInfo(jwt)
+      .then(({ data }) => {
+        setIsLoggedIn(true);
+        setEmail(data.email);
+        setCurrentUser(data);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   // Función para abrir Popup
@@ -107,7 +108,7 @@ function App() {
   const handleAddCardSubmit = (data) => {
     (async () => {
       await api.addNewCard(data.name, data.link).then((newCard) => {
-        setCards([newCard, ...cards]);
+        setCards([newCard.data, ...cards]);
         handleClosePopup();
       });
     })();
@@ -121,7 +122,7 @@ function App() {
       .then((newCard) => {
         setCards((state) =>
           state.map((currentCard) =>
-            currentCard._id === card._id ? newCard : currentCard
+            currentCard._id === card._id ? newCard.data : currentCard
           )
         );
       })
@@ -134,7 +135,9 @@ function App() {
       .deleteCard(card._id)
       .then((deletedCard) => {
         setCards((state) =>
-          state.filter((currentCard) => currentCard._id !== deletedCard._id)
+          state.filter(
+            (currentCard) => currentCard._id !== deletedCard.data._id
+          )
         );
       })
       .catch((error) => console.error(error));
@@ -159,8 +162,10 @@ function App() {
     if (!email || !password) return;
     auth
       .authorize(email, password)
-      .then((data) => {
+      .then(async (data) => {
         if (data.token) {
+          const userInfo = await auth.getUserInfo(data.token);
+          setCurrentUser(userInfo.data);
           setToken(data.token);
           setEmail(email);
           setIsLoggedIn(true);
