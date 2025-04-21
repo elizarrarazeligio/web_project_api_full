@@ -3,12 +3,12 @@ import { getToken } from "./token";
 class Api {
   constructor({ baseUrl, headers }) {
     this._baseUrl = baseUrl;
-    this._headers = headers;
+    this.headers = headers;
   }
 
   // Función Promise para obtener cartas iniciales del servidor
   getInitialCards() {
-    return fetch(`${this._baseUrl}/cards`, { headers: this._headers }).then(
+    return fetch(`${this._baseUrl}/cards`, { headers: this.headers }).then(
       (res) => {
         if (res.ok) {
           return res.json();
@@ -23,7 +23,7 @@ class Api {
   editUserInfo(name, about) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: this.headers,
       body: JSON.stringify({
         name: name,
         about: about,
@@ -41,7 +41,7 @@ class Api {
   addNewCard(name, link) {
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
-      headers: this._headers,
+      headers: this.headers,
       body: JSON.stringify({
         name: name,
         link: link,
@@ -59,7 +59,7 @@ class Api {
   deleteCard(id) {
     return fetch(`${this._baseUrl}/cards/${id}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: this.headers,
     }).then((res) => {
       if (res.ok) {
         return res.json();
@@ -73,7 +73,7 @@ class Api {
   changeProfilePicture(avatar) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: this.headers,
       body: JSON.stringify({
         avatar: avatar,
       }),
@@ -90,7 +90,7 @@ class Api {
   _addLike(id) {
     return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: "PUT",
-      headers: this._headers,
+      headers: this.headers,
     }).then((res) => {
       if (res.ok) {
         return res.json();
@@ -104,7 +104,7 @@ class Api {
   _removeLike(id) {
     return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: this.headers,
     }).then((res) => {
       if (res.ok) {
         return res.json();
@@ -126,7 +126,6 @@ class Api {
 
 // Creación de instancia de Api para solicitudes a servidor
 export const api = new Api({
-  // baseUrl: "https://around.nomoreparties.co/v1/web-es-cohort-17",
   baseUrl: "http://localhost:3005",
   headers: {
     "Content-Type": "application/json",

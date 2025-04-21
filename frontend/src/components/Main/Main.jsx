@@ -4,12 +4,20 @@ import NewCard from "./Popup/form/NewCard/NewCard";
 import EditProfile from "./Popup/form/EditProfile/EditProfile";
 import EditAvatar from "./Popup/form/EditAvatar/EditAvatar";
 import Card from "../Card/Card";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import { api } from "../../utils/Api";
 
 function Main(props) {
-  const { cards, onOpenPopup, onCardLike, onCardDelete } = props;
+  const { cards, setCards, onOpenPopup, onCardLike, onCardDelete } = props;
   const { currentUser } = useContext(CurrentUserContext);
+
+  // Efecto para renderizar tarjetas al montar Main
+  useEffect(() => {
+    api.getInitialCards().then(({ data }) => {
+      setCards(data);
+    });
+  }, []);
 
   // Asignación de props a variables para generación de Popups
   const newCardPopup = { title: "Nuevo lugar", children: <NewCard /> };

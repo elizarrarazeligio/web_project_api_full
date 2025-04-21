@@ -22,7 +22,10 @@ module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(201).send({ data: card }))
+    .then(async (card) => {
+      card = await card.populate("owner");
+      res.status(201).send({ data: card });
+    })
     .catch((err) => {
       const error = typeOfError(err);
       res.status(error.statusCode).send({ message: error?.message });
@@ -38,6 +41,7 @@ module.exports.addLike = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
+    .populate("owner likes")
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       const error = typeOfError(err);
@@ -54,6 +58,7 @@ module.exports.removeLike = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true }
   )
+    .populate("owner likes")
     .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       const error = typeOfError(err);

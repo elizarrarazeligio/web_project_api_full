@@ -52,13 +52,6 @@ function App() {
     ),
   };
 
-  // Efecto para renderizar tarjetas al montar App
-  useEffect(() => {
-    api.getInitialCards().then(({ data }) => {
-      setCards(data);
-    });
-  }, []);
-
   // Efecto para verificar token al montar App
   useEffect(() => {
     const jwt = getToken();
@@ -88,7 +81,7 @@ function App() {
   const handleUpdateUser = (data) => {
     (async () => {
       await api.editUserInfo(data.name, data.about).then((newData) => {
-        setCurrentUser(newData);
+        setCurrentUser(newData.data);
         handleClosePopup();
       });
     })();
@@ -98,7 +91,7 @@ function App() {
   const handleUpdateAvatar = (avatar) => {
     (async () => {
       await api.changeProfilePicture(avatar).then((newAvatar) => {
-        setCurrentUser(newAvatar);
+        setCurrentUser(newAvatar.data);
         handleClosePopup();
       });
     })();
@@ -108,6 +101,7 @@ function App() {
   const handleAddCardSubmit = (data) => {
     (async () => {
       await api.addNewCard(data.name, data.link).then((newCard) => {
+        console.log(newCard.data);
         setCards([newCard.data, ...cards]);
         handleClosePopup();
       });
@@ -164,11 +158,11 @@ function App() {
       .authorize(email, password)
       .then(async (data) => {
         if (data.token) {
-          const userInfo = await auth.getUserInfo(data.token);
-          setCurrentUser(userInfo.data);
+          setCurrentUser((await auth.getUserInfo(data.token)).data);
           setToken(data.token);
           setEmail(email);
           setIsLoggedIn(true);
+          api.headers.Authorization = `Bearer ${data.token}`;
           const redirectPath = location.state?.from?.pathname || "/";
           navigate(redirectPath);
         }
@@ -198,6 +192,7 @@ function App() {
               <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <Main
                   cards={cards}
+                  setCards={setCards}
                   onOpenPopup={handleOpenPopup}
                   onCardLike={handleCardLike}
                   onCardDelete={handleCardDelete}
