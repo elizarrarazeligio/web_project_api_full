@@ -1,9 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { celebrate, Joi } = require("celebrate");
+const { celebrate, Joi, errors } = require("celebrate");
 const bodyParser = require("body-parser");
 const auth = require("./middlewares/auth");
 const cors = require("./middlewares/cors");
+const errorHandler = require("./middlewares/errors");
 const app = express();
 require("dotenv").config();
 
@@ -41,6 +42,10 @@ app.use(auth);
 // Rutas que requieren autenticación
 app.use("/users", users);
 app.use("/cards", cards);
+
+// Middlewares de errores (celebrate y handler)
+app.use(errors());
+app.use(errorHandler);
 
 app.get("/*", (req, res) => {
   res.status(404).send({ message: "Recurso solicitado no encontrado." });

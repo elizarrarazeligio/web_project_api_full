@@ -1,10 +1,3 @@
-module.exports.errorAtFail = (message) => {
-  const error = new Error(message);
-  error.name = "NotFoundError";
-
-  return error;
-};
-
 module.exports.typeOfError = (error) => {
   if (error.name == "NotFoundError") {
     error.statusCode = 404;

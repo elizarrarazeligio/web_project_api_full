@@ -3,6 +3,7 @@
   "rules": {
     "no-console": "off",
     "no-underscore-dangle": "off",
-    "no-multiple-empty-lines": "off"
+    "no-multiple-empty-lines": "off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }] // Ignora las variables sin usar especificadas
   }
 }

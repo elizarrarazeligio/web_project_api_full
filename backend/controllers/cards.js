@@ -1,24 +1,20 @@
 const Card = require("../models/card");
-const { errorAtFail, typeOfError } = require("../utils/errors");
+const NotFoundError = require("../errors/not-found-err");
 
 // ===== GET - Obtiene todos las tarjetas =================
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .sort({ createdAt: -1 })
     .orFail(() => {
-      const error = errorAtFail("No se encontró ninguna tarjeta.");
-      throw error;
+      throw new NotFoundError("No se encontró ninguna tarjeta.");
     })
     .populate("owner likes")
     .then((cards) => res.status(200).send({ data: cards }))
-    .catch((err) => {
-      const error = typeOfError(err);
-      res.status(error.statusCode).send({ message: error.message });
-    });
+    .catch(next);
 };
 
 // ===== POST - Crea una nueva tarjeta ====================
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
@@ -27,13 +23,13 @@ module.exports.createCard = (req, res) => {
       res.status(201).send({ data: card });
     })
     .catch((err) => {
-      const error = typeOfError(err);
-      res.status(error.statusCode).send({ message: error?.message });
+      if (err.name === "ValidationError") err.statusCode = 400;
+      next(err);
     });
 };
 
 // ===== PUT - Agrega like a tarjeta ======================
-module.exports.addLike = (req, res) => {
+module.exports.addLike = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndUpdate(
@@ -43,14 +39,11 @@ module.exports.addLike = (req, res) => {
   )
     .populate("owner likes")
     .then((card) => res.status(200).send({ data: card }))
-    .catch((err) => {
-      const error = typeOfError(err);
-      res.status(error.statusCode).send({ message: error.message });
-    });
+    .catch(next);
 };
 
 // ===== DELETE - Borra like de tarjeta ===================
-module.exports.removeLike = (req, res) => {
+module.exports.removeLike = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndUpdate(
@@ -60,24 +53,17 @@ module.exports.removeLike = (req, res) => {
   )
     .populate("owner likes")
     .then((card) => res.status(200).send({ data: card }))
-    .catch((err) => {
-      const error = typeOfError(err);
-      res.status(error.statusCode).send({ message: error.message });
-    });
+    .catch(next);
 };
 
 // ===== DELETE - Borra tarjeta por su ID =================
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndDelete(cardId)
     .orFail(() => {
-      const error = errorAtFail(`No se encontró la tarjeta con ID ${cardId}`);
-      throw error;
+      throw new NotFoundError(`No se encontró la tarjeta con ID ${cardId}`);
     })
     .then((card) => res.status(200).send({ data: card }))
-    .catch((err) => {
-      const error = typeOfError(err);
-      res.status(error.statusCode).send({ message: error.message });
-    });
+    .catch(next);
 };

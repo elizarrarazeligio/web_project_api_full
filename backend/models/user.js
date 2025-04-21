@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const BadRequestError = require("../errors/bad-request-err");
 
 const userSchema = mongoose.Schema({
   name: {
@@ -51,13 +52,25 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
     .select("+password") // Agrega el campo password que se omitió desde el esquema
     .then((user) => {
       if (!user)
-        return Promise.reject(new Error("Incorrect password or email."));
+        return Promise.reject(
+          new BadRequestError("Incorrect password or email.")
+        );
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched)
-          return Promise.reject(new Error("Incorrect password or email."));
+          return Promise.reject(
+            new BadRequestError("Incorrect password or email.")
+          );
         return user;
       });
     });
 };
+
+userSchema.post("save", function (err, doc, next) {
+  if (err.name === "MongoServerError" && err.code === 11000) {
+    next(new BadRequestError("Duplicate email, try another one."));
+  } else {
+    next();
+  }
+});
 
 module.exports = mongoose.model("user", userSchema);
