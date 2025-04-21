@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const auth = require("./middlewares/auth");
 const cors = require("./middlewares/cors");
 const errorHandler = require("./middlewares/errors");
+const { requestLogger, errorLogger } = require("./middlewares/loggers");
 const app = express();
 require("dotenv").config();
 
@@ -22,6 +23,9 @@ app.listen(PORT, () => {
 
 app.use(bodyParser.json());
 app.use(cors);
+
+// Middleware para registro de solicitudes
+app.use(requestLogger);
 
 // Rutas sin autenticación
 app.post("/signin", login);
@@ -42,6 +46,9 @@ app.use(auth);
 // Rutas que requieren autenticación
 app.use("/users", users);
 app.use("/cards", cards);
+
+// Middleware para registro de errores
+app.use(errorLogger);
 
 // Middlewares de errores (celebrate y handler)
 app.use(errors());
