@@ -13,7 +13,7 @@ const users = require("./routes/users");
 const cards = require("./routes/cards");
 const { createUser, login } = require("./controllers/users");
 
-const { PORT = 3005 } = process.env;
+const { PORT = 3000 } = process.env;
 
 mongoose.connect("mongodb://localhost:27017/aroundb");
 
