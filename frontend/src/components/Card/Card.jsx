@@ -18,7 +18,7 @@ export default function Card(props) {
     children: <DeleteCard onCardDelete={onCardDelete} card={card} />,
   };
 
-  const isLiked = likes.some((like) => like.name === currentUser.name);
+  const isLiked = likes.some((like) => like._id === currentUser._id);
 
   const cardLikeButtonClassName = `photos__like ${
     isLiked ? "photos__like_active" : ""
