@@ -35,7 +35,7 @@ export default function Card(props) {
       <img
         className="photos__trash"
         alt=""
-        src={card.owner.name === currentUser.name ? trashIcon : ""}
+        src={card.owner._id === currentUser._id ? trashIcon : ""}
         onClick={() => onOpen(deleteCardPopup)}
       />
       <div className="photos__heading">
