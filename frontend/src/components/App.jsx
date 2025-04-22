@@ -99,7 +99,6 @@ function App() {
   const handleAddCardSubmit = (data) => {
     (async () => {
       await api.addNewCard(data.name, data.link).then((newCard) => {
-        console.log(newCard.data);
         setCards([newCard.data, ...cards]);
         handleClosePopup();
       });
