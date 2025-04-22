@@ -30,4 +30,4 @@ Por otra parte, el stack tecnológico usado en este proyecto abarca:<br>
 Cualquier comentario y/o sugerencia es bienvenido, para poder impulsar y mejorar este y futuros proyectos! 🎯
 <br><br>
 A continuación dejo el link al sitio desplegado:<br>
-...
+(https://www.aroundproject.ignorelist.com/signin)[https://www.aroundproject.ignorelist.com/signin]
