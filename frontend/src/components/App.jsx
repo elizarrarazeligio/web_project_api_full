@@ -26,7 +26,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [popup, setPopup] = useState(null);
   const [cards, setCards] = useState([]);
-  const [email, setEmail] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const location = useLocation();
@@ -61,7 +60,6 @@ function App() {
       .getUserInfo(jwt)
       .then(({ data }) => {
         setIsLoggedIn(true);
-        setEmail(data.email);
         setCurrentUser(data);
       })
       .catch((err) => console.log(err));
@@ -160,7 +158,6 @@ function App() {
         if (data.token) {
           setCurrentUser((await auth.getUserInfo(data.token)).data);
           setToken(data.token);
-          setEmail(email);
           setIsLoggedIn(true);
           api.headers.Authorization = `Bearer ${data.token}`;
           const redirectPath = location.state?.from?.pathname || "/";
@@ -181,9 +178,9 @@ function App() {
         }}
       >
         <Header
-          email={email}
+          currentUser={currentUser}
           setIsLoggedIn={setIsLoggedIn}
-          setEmail={setEmail}
+          setCurrentUser={setCurrentUser}
         />
         <Routes>
           <Route

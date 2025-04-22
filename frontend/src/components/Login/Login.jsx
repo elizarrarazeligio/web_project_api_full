@@ -23,7 +23,7 @@ export default function Login({ handleLogin }) {
   return (
     <section className="auth">
       <h2 className="auth__title">Inicia sesión</h2>
-      <form className="form" noValidate onSubmit={handleSubmit}>
+      <form className="form auth__form" noValidate onSubmit={handleSubmit}>
         <fieldset className="form__format">
           <input
             id="email-input"

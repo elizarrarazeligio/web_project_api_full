@@ -23,7 +23,7 @@ export default function Register({ handleRegister }) {
   return (
     <section className="auth">
       <h2 className="auth__title">Regístrate</h2>
-      <form className="form" noValidate onSubmit={handleSubmit}>
+      <form className="form auth__form" noValidate onSubmit={handleSubmit}>
         <fieldset className="form__format">
           <input
             id="email-input"
