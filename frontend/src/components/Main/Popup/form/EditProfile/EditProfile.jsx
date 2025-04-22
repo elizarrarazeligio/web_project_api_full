@@ -1,9 +1,14 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 import { CurrentUserContext } from "../../../../../contexts/CurrentUserContext";
+import {
+  configParameters,
+  FormValidator,
+} from "../../../../../utils/FormValidator";
 
 export default function EditProfile() {
   const userContext = useContext(CurrentUserContext);
   const { currentUser, handleUpdateUser } = userContext;
+  const formRef = useRef();
 
   const [name, setName] = useState(currentUser.name);
   const [description, setDescription] = useState(currentUser.about);
@@ -18,11 +23,18 @@ export default function EditProfile() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const formValidation = new FormValidator(configParameters, formRef.current);
+    formValidation.enableValidation();
     handleUpdateUser({ name, about: description });
   };
 
   return (
-    <form className="form popup__form" noValidate onSubmit={handleSubmit}>
+    <form
+      className="form popup__form"
+      noValidate
+      onSubmit={handleSubmit}
+      ref={formRef}
+    >
       <fieldset className="form__format">
         <input
           id="name-input"

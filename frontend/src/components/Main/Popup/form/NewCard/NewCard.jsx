@@ -1,14 +1,21 @@
 import { CurrentUserContext } from "../../../../../contexts/CurrentUserContext";
 import { useContext, useRef } from "react";
+import {
+  configParameters,
+  FormValidator,
+} from "../../../../../utils/FormValidator";
 
 export default function NewCard() {
   const { handleAddCardSubmit } = useContext(CurrentUserContext);
 
   const placeRef = useRef();
   const linkRef = useRef();
+  const formRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const formValidation = new FormValidator(configParameters, formRef.current);
+    formValidation.enableValidation();
     handleAddCardSubmit({
       name: placeRef.current.value,
       link: linkRef.current.value,
@@ -16,7 +23,12 @@ export default function NewCard() {
   };
 
   return (
-    <form className="form popup__form" noValidate onSubmit={handleSubmit}>
+    <form
+      className="form popup__form"
+      noValidate
+      onSubmit={handleSubmit}
+      ref={formRef}
+    >
       <fieldset className="form__format">
         <input
           id="place-input"

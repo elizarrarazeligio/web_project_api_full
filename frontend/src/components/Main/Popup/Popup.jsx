@@ -1,7 +1,8 @@
 import closeButton from "../../../assets/images/close_icon.svg";
 
 export default function Popup(props) {
-  const { onClose, title, children } = props;
+  const { onClose, onEsc, title, children } = props;
+  document.addEventListener("keydown", onEsc);
 
   return (
     <section className="popup">

@@ -73,6 +73,11 @@ function App() {
   // Función para cerrar Popup
   function handleClosePopup() {
     setPopup(null);
+    document.removeEventListener(handleEscClose);
+  }
+
+  function handleEscClose(e) {
+    if (e.key === "Escape") handleClosePopup();
   }
 
   // Función para editar información de usuario
@@ -230,7 +235,11 @@ function App() {
 
         {/* Evaluando hook para abrir Popups */}
         {popup && (
-          <Popup onClose={handleClosePopup} title={popup.title}>
+          <Popup
+            onClose={handleClosePopup}
+            onEsc={handleEscClose}
+            title={popup.title}
+          >
             {popup.children}
           </Popup>
         )}
