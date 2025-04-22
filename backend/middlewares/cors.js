@@ -1,7 +1,7 @@
 const allowedCors = [
   "http://localhost:3001",
-  "https://aroundproject.ignorelist.com/",
-  "https://www.aroundproject.ignorelist.com/",
+  "https://aroundproject.ignorelist.com",
+  "https://www.aroundproject.ignorelist.com",
 ];
 
 // ===== Habilitación de CORS en backend ==================

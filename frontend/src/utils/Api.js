@@ -126,7 +126,7 @@ class Api {
 
 // Creación de instancia de Api para solicitudes a servidor
 export const api = new Api({
-  baseUrl: "http://localhost:3000",
+  baseUrl: "https://api.aroundproject.ignorelist.com",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
