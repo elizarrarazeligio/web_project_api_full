@@ -73,7 +73,7 @@ function App() {
   // Función para cerrar Popup
   function handleClosePopup() {
     setPopup(null);
-    document.removeEventListener(handleEscClose);
+    document.removeEventListener("keydown", handleEscClose);
   }
 
   function handleEscClose(e) {
@@ -135,6 +135,7 @@ function App() {
             (currentCard) => currentCard._id !== deletedCard.data._id
           )
         );
+        handleClosePopup();
       })
       .catch((error) => console.error(error));
   }

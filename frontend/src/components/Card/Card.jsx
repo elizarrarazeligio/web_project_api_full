@@ -1,6 +1,7 @@
 import trashIcon from "../../assets/images/trash.png";
 import likeIcon from "../../assets/images/boton_like.svg";
 import ImagePopup from "../Main/Popup/ImagePopup/ImagePopup";
+import DeleteCard from "../Main/Popup/form/DeleteCard/DeleteCard";
 import { useContext } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
@@ -11,6 +12,10 @@ export default function Card(props) {
 
   const imageComponent = {
     children: <ImagePopup link={link} place={name} />,
+  };
+  const deleteCardPopup = {
+    title: "¿Estás seguro/a?",
+    children: <DeleteCard onCardDelete={onCardDelete} card={card} />,
   };
 
   const isLiked = likes.some((like) => like.name === currentUser.name);
@@ -31,7 +36,7 @@ export default function Card(props) {
         className="photos__trash"
         alt=""
         src={card.owner.name === currentUser.name ? trashIcon : ""}
-        onClick={() => onCardDelete(card)}
+        onClick={() => onOpen(deleteCardPopup)}
       />
       <div className="photos__heading">
         <h2 className="photos__place">{name}</h2>
